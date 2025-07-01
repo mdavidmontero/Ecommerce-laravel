@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Family;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -27,7 +28,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        $families = Family::all();
+        return view('admin.categories.create', compact('families'));
     }
 
     /**
@@ -35,7 +37,17 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'family_id' => 'required|exists:families,id',
+            'name' => 'required',
+        ]);
+        Category::create($request->all());
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => '¡Bien Hecho!',
+            'text' => 'Categoria creada correctamente.',
+        ]);
+        return redirect()->route('admin.categories.index');
     }
 
     /**
@@ -51,7 +63,8 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        $families = Family::all();
+        return view('admin.categories.edit', compact('category', 'families'));
     }
 
     /**
@@ -59,7 +72,17 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $request->validate([
+            'family_id' => 'required|exists:families,id',
+            'name' => 'required',
+        ]);
+        $category->update($request->all());
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => '¡Bien Hecho!',
+            'text' => 'La categoria de productos ha sido actualizada correctamente.',
+        ]);
+        return redirect()->route('admin.categories.edit', $category);
     }
 
     /**
@@ -67,6 +90,20 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        if ($category->subcategories->count()) {
+            session()->flash('swal', [
+                'icon' => 'error',
+                'title' => '¡Error!',
+                'text' => 'No se puede eliminar la categoria de productos porque tiene subcategorias asociadas.',
+            ]);
+            return redirect()->route('admin.categories.edit', $category);
+        }
+        $category->delete();
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => '¡Bien Hecho!',
+            'text' => 'La categoria de productos ha sido eliminada correctamente.',
+        ]);
+        return redirect()->route('admin.categories.index');
     }
 }
