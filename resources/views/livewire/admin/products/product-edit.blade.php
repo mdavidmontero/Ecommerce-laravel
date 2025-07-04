@@ -1,5 +1,4 @@
 <div>
-
     <form wire:submit='store'>
         <figure class="relative mb-4">
             <div class="absolute top-8 right-8">
@@ -10,9 +9,8 @@
                 </label>
             </div>
             <img class="object-cover aspect-[16/9] object-center w-full"
-                src="{{ $image ? $image->temporaryUrl() : asset('img/no-image.png') }}" alt="No image">
+                src="{{ $image ? $image->temporaryUrl() : Storage::url($productEdit['image_path']) }}" alt="No image">
         </figure>
-
         <x-validation-errors class="mb-4" />
 
         <div class="card">
@@ -20,22 +18,22 @@
                 <x-label>
                     <x-label class="mb-1">Código</x-label>
                 </x-label>
-                <x-input placeholder='Por favor ingrese el código del producto' wire:model='product.sku'
+                <x-input placeholder='Por favor ingrese el código del producto' wire:model='productEdit.sku'
                     class="w-full" />
             </div>
             <div class="mb-4">
                 <x-label>
                     <x-label class="mb-1">Nombre</x-label>
                 </x-label>
-                <x-input placeholder='Por favor ingrese el nombre del producto' wire:model='product.name'
+                <x-input placeholder='Por favor ingrese el nombre del producto' wire:model='productEdit.name'
                     class="w-full" />
             </div>
             <div class="mb-4">
                 <x-label>
                     <x-label class="mb-1">Descripción</x-label>
                 </x-label>
-                <x-textarea placeholder='Por favor ingrese la descripción del producto' wire:model='product.description'
-                    class="w-full"></x-textarea>
+                <x-textarea placeholder='Por favor ingrese la descripción del producto'
+                    wire:model='productEdit.description' class="w-full"></x-textarea>
             </div>
 
             <div class="mb-4">
@@ -65,7 +63,7 @@
                 <x-label>
                     SubCategorias
                 </x-label>
-                <x-select class="w-full" wire:model.live="product.subcategory_id">
+                <x-select class="w-full" wire:model.live="productEdit.subcategory_id">
                     <option value="" disabled>Seleccione una subcategoria</option>
                     @foreach ($this->subcategories as $subcategory)
                         <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
@@ -77,12 +75,38 @@
                     Precio
                 </x-label>
                 <x-input type="number" step="0.01" placeholder='Por favor ingrese el precio del producto'
-                    wire:model='product.price' class="w-full" />
+                    wire:model='productEdit.price' class="w-full" />
             </div>
             <div class="flex justify-end">
-                <x-button>Crear Producto</x-button>
+                <x-danger-button onclick="confirmDelete()" class="mr-2">Eliminar</x-danger-button>
+                <x-button class="ml-2">Actualizar</x-button>
             </div>
         </div>
     </form>
+    <form action="{{ route('admin.products.destroy', $product) }}" method="POST" id="delete-form">
+        @csrf
+        @method('DELETE')
 
+
+    </form>
+    @push('js')
+        <script>
+            function confirmDelete() {
+                Swal.fire({
+                    title: "Estas Seguro?",
+                    text: "No podras revertir esto!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Si, borralo!",
+                    cancelButtonText: "Cancelar",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('delete-form').submit();
+                    }
+                });
+            }
+        </script>
+    @endpush
 </div>
