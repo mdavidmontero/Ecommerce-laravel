@@ -1,0 +1,2 @@
+--Crear componente de livewire
+php artisan make:livewire admin.options.manage-options
