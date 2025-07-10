@@ -1,2 +1,11 @@
 --Crear componente de livewire
 php artisan make:livewire admin.options.manage-options
+ php artisan make:livewire admin.options.add-new-feature
+
+Continuar sección variantes - Video 4
+
+--Form object , refactorizar
+php artisan livewire:form Admin/Options/NewOptionForm
+
+--Ejecutar mugracios para refresh a la bd
+php artisan migrate:fresh --seed
