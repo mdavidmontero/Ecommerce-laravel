@@ -18,6 +18,8 @@ class Product extends Model
         'price',
         'subcategory_id'
     ];
+
+
     //relacion uno a muchos inversa
     public function subcategory()
     {
@@ -27,5 +29,12 @@ class Product extends Model
     public function variants()
     {
         return $this->hasMany(Variant::class);
+    }
+
+    public function options()
+    {
+        return $this->belongsToMany(Option::class)
+            ->using(OptionProduct::class)
+            ->withPivot('features')->withTimestamps();
     }
 }
