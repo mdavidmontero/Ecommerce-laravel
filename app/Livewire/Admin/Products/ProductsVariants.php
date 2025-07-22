@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Products;
 
 use App\Models\Feature;
 use App\Models\Option;
+use App\Models\Variant;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -58,6 +59,14 @@ class ProductsVariants extends Component
             return $feature['id'] != $feature_id;
         })]);
         $this->product = $this->product->fresh();
+        $this->generarVariantes();
+    }
+
+    public function deleteOption($option_id)
+    {
+        $this->product->options()->detach($option_id);
+        $this->product = $this->product->fresh();
+        $this->generarVariantes();
     }
 
 
@@ -71,6 +80,7 @@ class ProductsVariants extends Component
         ]);
         $this->product->options()->attach($this->variant['option_id'], ['features' => $this->variant['features']]);
         $this->product = $this->product->fresh();
+        $this->generarVariantes();
         $this->reset(['variant', 'openModal']);
     }
 
@@ -93,6 +103,35 @@ class ProductsVariants extends Component
             $this->variant['features'][$index]['description'] = $feature->description;
         }
     }
+
+    public function generarVariantes()
+    {
+        $feautures = $this->product->options->pluck('pivot.features');
+        $combinaciones = $this->generarCombinaciones($feautures);
+        $this->product->variants()->delete();
+        foreach ($combinaciones as $combinacion) {
+            $variant = Variant::create([
+                'product_id' => $this->product->id,
+            ]);
+            $variant->features()->attach($combinacion);
+        }
+        $this->dispatch('variant-generate');
+    }
+    function generarCombinaciones($arrays, $indice = 0, $combinacion = [])
+    {
+        if ($indice == count($arrays)) {
+            return [$combinacion];
+        }
+        $resultado = [];
+        foreach ($arrays[$indice] as $item) {
+            $combinacionTemporal = $combinacion;
+            $combinacionTemporal[] = $item['id'];
+            $resultado = array_merge($resultado, $this->generarCombinaciones($arrays, $indice + 1, $combinacionTemporal));
+        }
+
+        return $resultado;
+    }
+
 
     public function render()
     {

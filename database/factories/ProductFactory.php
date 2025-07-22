@@ -3,23 +3,31 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\File;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
  */
 class ProductFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         $imageName = uniqid('product_') . '.jpg';
         $imagePath = public_path("storage/products/{$imageName}");
         $imageUrl = 'https://picsum.photos/640/480';
-        file_put_contents($imagePath, file_get_contents($imageUrl));
+
+        try {
+            $imageContent = @file_get_contents($imageUrl);
+            if ($imageContent !== false) {
+                file_put_contents($imagePath, $imageContent);
+            } else {
+                // Si falla, usa una imagen local por defecto
+                $imageName = 'default.jpg';
+            }
+        } catch (\Exception $e) {
+            $imageName = 'default.jpg';
+        }
+
         return [
             'sku' => $this->faker->unique()->numberBetween(100000, 999999),
             'name' => $this->faker->sentence(),
