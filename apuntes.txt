@@ -13,4 +13,17 @@ php artisan migrate:fresh --seed
 
 php artisan make:model OptionProduct
 
---continuar video 9 minuto 20 crear variantes
+
+Modelos con su migración
+---------------
+ php artisan make:model Cover -m
+php artisan make:controller Admin/CoverController --model=Cover
+
+
+Crear observer
+----------------
+php artisan make:observer CoverObserver
+php artisan make:provider EventServiceProvider
+
+
+php artisan make:controller Api/SortController
