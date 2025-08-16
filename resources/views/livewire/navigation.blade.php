@@ -22,9 +22,18 @@
                 <div class="flex items-center space-x-4 md:space-x-8">
                     <x-dropdown>
                         <x-slot name="trigger">
-                            <button class="text-xl md:text-3xl">
-                                <i class="text-white fas fa-user"></i>
-                            </button>
+                            @auth
+                                <button
+                                    class="flex text-sm transition border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300">
+                                    <img class="object-cover rounded-full size-8"
+                                        src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                                </button>
+                            @else
+                                <button class="text-xl md:text-3xl">
+                                    <i class="text-white fas fa-user"></i>
+                                </button>
+                            @endauth
+
                         </x-slot>
                         <x-slot name="content">
                             @guest
@@ -47,6 +56,13 @@
                                 </div>
                             @else
                                 <x-dropdown-link href="{{ route('profile.show') }}"> Mi Perfil </x-dropdown-link>
+                                <form method="POST" action="{{ route('logout') }}" x-data>
+                                    @csrf
+
+                                    <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
+                                        {{ __('Log Out') }}
+                                    </x-dropdown-link>
+                                </form>
                             @endguest
                         </x-slot>
                     </x-dropdown>
