@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\SubcategoryController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\WelcomeController;
 use App\Models\Product;
 use App\Models\Variant;
@@ -17,36 +20,6 @@ Route::middleware([
     })->name('dashboard');
 });
 
-
-Route::get('prueba', function () {
-    $product =  Product::find(20);
-    $feautures = $product->options->pluck('pivot.features');
-    $combinaciones = generarCombinaciones($feautures);
-
-    $product->variants()->delete();
-
-    foreach ($combinaciones as $combinacion) {
-        $variant = Variant::create([
-            'product_id' => $product->id,
-        ]);
-        $variant->features()->attach($combinacion);
-    }
-
-    return "Variantes creadas";
-});
-
-
-function generarCombinaciones($arrays, $indice = 0, $combinacion = [])
-{
-    if ($indice == count($arrays)) {
-        return [$combinacion];
-    }
-    $resultado = [];
-    foreach ($arrays[$indice] as $item) {
-        $combinacionTemporal = $combinacion;
-        $combinacionTemporal[] = $item['id'];
-        $resultado = array_merge($resultado, generarCombinaciones($arrays, $indice + 1, $combinacionTemporal));
-    }
-
-    return $resultado;
-}
+Route::get('families/{family}', [FamilyController::class, 'show'])->name('families.show');
+Route::get('categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
+Route::get('subcategories/{subcategory}', [SubcategoryController::class, 'show'])->name('subcategories.show');
