@@ -27,3 +27,5 @@ php artisan make:provider EventServiceProvider
 
 
 php artisan make:controller Api/SortController
+
+php artisan make:livewire products.add-to-cart

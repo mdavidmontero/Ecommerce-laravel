@@ -68,9 +68,13 @@
                         </x-slot>
                     </x-dropdown>
 
-                    <button class="text-xl md:text-3xl">
-                        <i class="text-white fas fa-shopping-cart"></i>
-                    </button>
+                    <a href="{{ route('cart.index') }}" class="relative">
+                        <i class="text-xl text-white fas fa-shopping-cart md:text-3xl"></i>
+                        <span id="cart-count"
+                            class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-4 ">
+                            {{ Cart::instance('shopping')->count() }}
+                        </span>
+                    </a>
                 </div>
             </div>
             <div class="mt-4 md:hidden">
@@ -148,6 +152,10 @@
 
     @push('js')
         <script>
+            Livewire.on('cartUpdated', (count) => {
+                document.getElementById('cart-count').innerText = count;
+            });
+
             function search(value) {
                 Livewire.dispatch('search', {
                     search: value
