@@ -4,7 +4,7 @@
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                 <li class="inline-flex items-center">
                     <a href="/"
-                        class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-purple-600 dark:text-gray-400 dark:hover:text-white">
+                        class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-purple-600 ">
                         <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             fill="currentColor" viewBox="0 0 20 20">
                             <path
@@ -21,7 +21,7 @@
                                 d="m1 9 4-4-4-4" />
                         </svg>
                         <a href="{{ route('families.show', $product->subcategory->category->family) }}"
-                            class="text-sm font-medium text-gray-700 ms-1 hover:text-purple-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">{{ $product->subcategory->category->family->name }}</a>
+                            class="text-sm font-medium text-gray-700 ms-1 hover:text-purple-600 md:ms-2 ">{{ $product->subcategory->category->family->name }}</a>
                     </div>
                 </li>
                 <li>
@@ -32,7 +32,7 @@
                                 d="m1 9 4-4-4-4" />
                         </svg>
                         <a href="{{ route('categories.show', $product->subcategory->category) }}"
-                            class="text-sm font-medium text-gray-700 ms-1 hover:text-purple-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">{{ $product->subcategory->category->name }}</a>
+                            class="text-sm font-medium text-gray-700 ms-1 hover:text-purple-600 md:ms-2 ">{{ $product->subcategory->category->name }}</a>
                     </div>
                 </li>
                 <li>
@@ -43,7 +43,7 @@
                                 d="m1 9 4-4-4-4" />
                         </svg>
                         <a href="{{ route('categories.show', $product->subcategory->category) }}"
-                            class="text-sm font-medium text-gray-700 ms-1 hover:text-purple-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">{{ $product->subcategory->name }}</a>
+                            class="text-sm font-medium text-gray-700 ms-1 hover:text-purple-600 md:ms-2 ">{{ $product->subcategory->name }}</a>
                     </div>
                 </li>
 

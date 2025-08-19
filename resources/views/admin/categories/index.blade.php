@@ -12,8 +12,8 @@
     </x-slot>
     @if ($categories->count())
         <div class="relative overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <table class="w-full text-sm text-left text-gray-500 rtl:text-right">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
                         <th scope="col" class="px-6 py-3">
                             ID
@@ -31,9 +31,8 @@
                 </thead>
                 <tbody>
                     @foreach ($categories as $category)
-                        <tr class="bg-white dark:bg-gray-800">
-                            <th scope="row"
-                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <tr class="bg-white">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                 {{ $category->id }}
                             </th>
                             <td class="px-6 py-4">
@@ -56,8 +55,7 @@
             {{ $categories->links() }}
         </div>
     @else
-        <div class="flex items-center p-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
-            role="alert">
+        <div class="flex items-center p-4 text-sm text-blue-800 rounded-lg bg-blue-50" role="alert">
             <svg class="inline w-4 h-4 shrink-0 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor" viewBox="0 0 20 20">
                 <path

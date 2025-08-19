@@ -30,7 +30,7 @@
                                 @switch($option->type)
                                     @case(1)
                                         <span
-                                            class="bg-gray-100 text-gray-800 text-xs font-medium ml-2 pl-2.5 pr-1.5 py-0.5 rounded-sm  dark:text-gray-400 border border-gray-500">{{ $feature->description }}
+                                            class="bg-gray-100 text-gray-800 text-xs font-medium ml-2 pl-2.5 pr-1.5 py-0.5 rounded-sm   border border-gray-500">{{ $feature->description }}
                                             <button class="ml-0.5" onclick="confirmDelete({{ $feature->id }}, 'feature')"
                                                 {{-- wire:click='deleteFeature({{ $feature->id }})' --}}><i
                                                     class="fa-solid fa-xmark hover:text-red-500"></i></button>
@@ -52,7 +52,7 @@
 
                                     @case(3)
                                         <span
-                                            class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-gray-400 border border-gray-500">
+                                            class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm  border border-gray-500">
                                             {{ $feature->description }}</span>
                                     @break
 

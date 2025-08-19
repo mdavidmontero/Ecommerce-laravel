@@ -31,7 +31,7 @@
                                         @switch($option->type)
                                             @case(1)
                                                 <span
-                                                    class="bg-gray-100 text-gray-800 text-xs font-medium ml-2 pl-2.5 pr-1.5 py-0.5 rounded-sm  dark:text-gray-400 border border-gray-500">{{ $feature['description'] }}
+                                                    class="bg-gray-100 text-gray-800 text-xs font-medium ml-2 pl-2.5 pr-1.5 py-0.5 rounded-sm   border border-gray-500">{{ $feature['description'] }}
                                                     <button class="ml-0.5"
                                                         onclick="confirmDeleteFeature({{ $option->id }}, {{ $feature['id'] }})"
                                                         {{-- wire:click='deleteFeature({{ $feature->id }})' --}}><i
@@ -55,7 +55,7 @@
 
                                             @case(3)
                                                 <span
-                                                    class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-gray-400 border border-gray-500">
+                                                    class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm border border-gray-500">
                                                     {{ $feature['description'] }}</span>
                                             @break
 
@@ -68,8 +68,7 @@
                         </div>
                     @endforeach
                 @else
-                    <div class="flex items-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
-                        role="alert">
+                    <div class="flex items-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50" role="alert">
                         <svg class="inline w-4 h-4 shrink-0 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             fill="currentColor" viewBox="0 0 20 20">
                             <path

@@ -14,4 +14,11 @@ class CreateAddressForm extends Form
     public $receiver = 1;
     public $receiver_info = [];
     public $default = false;
+
+    public function rules()
+    {
+        return [
+            'type' => 'required',
+        ];
+    }
 }
