@@ -56,9 +56,8 @@
                         COP {{ Cart::total() }}
                     </p>
                 </div>
-                <a href="" class="block w-full text-center btn btn-purple">
+                <a href="{{ route('shipping.index') }}" class="block w-full text-center btn btn-purple">
                     Continuar Compra
-
                 </a>
             </div>
         </div>
