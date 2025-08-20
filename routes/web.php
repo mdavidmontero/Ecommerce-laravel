@@ -4,6 +4,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\WelcomeController;
@@ -30,6 +31,7 @@ Route::get('subcategories/{subcategory}', [SubcategoryController::class, 'show']
 Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('cart', [CartController::class, 'index'])->name('cart.index');
 Route::get('shipping', [ShippingController::class, 'index'])->name('shipping.index');
+Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 
 
 Route::get('prueba', function () {
