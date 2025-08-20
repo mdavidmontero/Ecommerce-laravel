@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Livewire\Forms\CreateAddressForm;
+use App\Livewire\Forms\Shipping\EditAddressForm;
 use App\Models\Address;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -11,9 +12,10 @@ class ShippingAddresses extends Component
 {
     public $addresses;
 
-    public $newAddress = true;
+    public $newAddress = false;
 
     public CreateAddressForm $createAddress;
+    public EditAddressForm  $editAddress;
 
     public function mount()
     {
@@ -25,6 +27,40 @@ class ShippingAddresses extends Component
             'document_number' => Auth::user()->document_number,
             'phone' => Auth::user()->phone,
         ];
+    }
+    public function store()
+    {
+        $this->createAddress->save();
+        $this->addresses = Address::where('user_id', Auth::user()->id)->get();
+        $this->newAddress = false;
+    }
+
+    public function setDefaultAddress($id)
+    {
+        $this->addresses->each(function ($address) use ($id) {
+            $address->update([
+                'default' => $address->id == $id ? true : false,
+            ]);
+        });
+    }
+    public function edit($id)
+    {
+        $address = Address::find($id);
+        $this->editAddress->edit($address);
+    }
+    public function update()
+    {
+        $this->editAddress->update();
+        $this->addresses = Address::where('user_id', Auth::user()->id)->get();
+    }
+
+    public function deleteAddress($id)
+    {
+        Address::find($id)->delete();
+        $this->addresses = Address::where('user_id', Auth::user()->id)->get();
+        if ($this->addresses->where('default', true)->count() == 0 &&  $this->addresses->count() > 0) {
+            $this->addresses->first()->update(['default' => true]);
+        }
     }
     public function render()
     {
