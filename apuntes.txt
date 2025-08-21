@@ -38,3 +38,7 @@ php artisan livewire:form CreateAddressForm
 
 
 -Video 6 - Crear nueva dirección
+
+
+--revertir ultima migración
+php artisan migrate:rollback
