@@ -51,14 +51,119 @@
             </div>
             <div class="col-span-1">
                 <div class="lg:max-w-[40-rem] py-12 px-4 lg:pl-8 sm:pr-6 lg:pr-8 mr-auto">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nobis, ipsa! Alias, eos fugit pariatur
-                    tempora
-                    molestiae, velit animi nobis dolores voluptatum amet assumenda voluptates reprehenderit nemo. Optio
-                    provident velit dolorem.
-                </div>
+                    <ul class="mb-4 space-y-4">
+                        @foreach (Cart::instance('shopping')->content() as $item)
+                            <li class="flex items-center space-x-4">
+                                <div class="relative flex-shrink-0">
+                                    <img class="h-16 aspect-square" src="{{ $item->options->image }}" alt="">
+                                    <div
+                                        class="absolute flex items-center justify-center w-6 h-6 bg-gray-900 rounded-full bg-opacity-70 -right-2 -top-2">
+                                        <span class="font-semibold text-white">
+                                            {{ $item->qty }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <p>
+                                        {{ $item->name }}
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <p>
+                                        COP {{ $item->price }}
+                                    </p>
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                    <div class="flex justify-between">
+                        <p>
+                            Subtotal
+                        </p>
+                        <p>
+                            COP {{ Cart::instance('shopping')->subtotal() }}
+                            <i class="fa-solid fa-info-circle"
+                                title="El precio de envio es de 10.000 pesos colombianos"></i>
+                        </p>
+                        <p>
+                            Precio de envío
+                        </p>
+                        <p>
+                            COP 10.000
+                        </p>
+                    </div>
+                    <hr class="my-3">
+                    <div class="flex justify-between mb-4">
+                        <p class="text-lg font-semibold">
+                            Total
+                        </p>
+                        <p>
+                            COP {{ Cart::instance('shopping')->subtotal() }}
+                        </p>
+                    </div>
+                    <div class="">
+                        <button class="w-full btn btn-purple" onclick="VisanetCheckout.open()">Finalizar
+                            Pedido</button>
+                    </div>
 
+                    @if (session('niubiz'))
+                        @php
+                            $niubiz = session('niubiz');
+                            $response = $niubiz['response'];
+                            $purchaseNumber = $niubiz['purchaseNumber'];
+                        @endphp
+                        @isset($response['data'])
+                            <div class="p-4 mt-8 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+                                <p class="mb-4">
+                                    {{ $response['data']['ACTION_DESCRIPTION'] }}
+                                </p>
+                                <p>
+                                    <b>Número de Pedido: </b>
+                                    {{ $purchaseNumber }}
+                                </p>
+                                <p>
+                                    <b>Fecha y Hora del Pedido</b>
+                                    {{ now()->createFromFormat('ymdHis', $response['data']['TRANSACTION_DATE'])->format('d-m-Y H:i:s') }}
+                                </p>
+                                @isset($response['data']['CARD'])
+                                    <p>
+                                        <b>Tarjeta:</b>
+                                        {{ $response['data']['CARD'] }} ({{ $response['data']['BRAND'] }})
+                                    </p>
+                                @endisset
+                            </div>
+                        @endisset
+                    @endif
+                </div>
             </div>
         </div>
     </div>
+
+    @push('js')
+        <script type="text/javascript" src="{{ config('services.niubiz.url_js') }}"></script>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                let purchasenumber = Math.floor(Math.random() * 1000000000);
+                let amount = {{ (float) Cart::instance('shopping')->subtotal() + 10 }};
+
+                VisanetCheckout.configure({
+                    sessiontoken: '{{ $session_token }}',
+                    channel: 'web',
+                    merchantid: '{{ config('services.niubiz.merchant_id') }}',
+                    purchasenumber: purchasenumber,
+                    amount: amount,
+                    expirationminutes: '20',
+                    timeouturl: 'about:blank',
+                    merchantlogo: 'img/comercio.png',
+                    formbuttoncolor: '#000000',
+                    action: "{{ route('checkout.paid') }}?amount=" + amount + "&purchaseNumber=" +
+                        purchasenumber,
+                    complete: function(params) {
+                        alert(JSON.stringify(params));
+                    }
+                });
+            });
+        </script>
+    @endpush
 
 </x-app-layout>

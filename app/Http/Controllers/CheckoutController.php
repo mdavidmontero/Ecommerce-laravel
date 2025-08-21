@@ -30,7 +30,7 @@ class CheckoutController extends Controller
     {
         $merchant_id = config('services.niubiz.merchant_id');
         $url_api = config('services.niubiz.url_api') . "/api.ecommerce/v2/ecommerce/token/session/{$merchant_id}";
-        $total = Cart::instance('shopping')->subtotal();
+        $total = (float) Cart::instance('shopping')->subtotal() + 10;
         $response = Http::withHeaders([
             'Authorization' => $access_token,
             'Content-Type' => 'application/json',
@@ -58,5 +58,35 @@ class CheckoutController extends Controller
 
         ])->json();
         return $response['sessionKey'];
+    }
+
+    public function paid(Request $request)
+    {
+        $access_token = $this->generateAccessToken();
+        $merchant_id = config('services.niubiz.merchant_id');
+        $url_api = config('services.niubiz.url_api') . "/api.authorization/v3/authorization/ecommerce/{$merchant_id}";
+        $response = Http::withHeaders([
+            'Authorization' => $access_token,
+            'Content-Type' => 'application/json',
+        ])->post($url_api, [
+            'channel' => 'web',
+            'captureType' => 'manual',
+            'countable' => true,
+            'order' => [
+                "tokenId" => $request->transactionToken,
+                "purchaseNumber" => $request->purchaseNumber,
+                "amount" => $request->amount,
+                'currency' => 'USD',
+            ]
+        ])->json();
+        session()->flash('niubiz', [
+            'response' => $response,
+            'purchaseNumber' => $request->purchaseNumber,
+        ]);
+        if (isset($response['dataMap']) && $response['dataMap']['ACTION_CODE'] == '000') {
+            return redirect()->route('gracias');
+        }
+
+        return redirect()->route('checkout.index');
     }
 }
