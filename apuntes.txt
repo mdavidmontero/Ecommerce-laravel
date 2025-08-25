@@ -36,9 +36,20 @@ php artisan make:livewire products.add-to-cart
 php artisan livewire:form CreateAddressForm
 
 
+datatable
+----------------
+php artisan make:datatable admin.orders.order-table Order
+
+
 
 -Video 6 - Crear nueva dirección
 
 
 --revertir ultima migración
 php artisan migrate:rollback
+
+
+--video 3 crear ticker de despacho
+
+php artisan make:model Driver -m
+php artisan make:controller Admin/DriverController --model=Driver

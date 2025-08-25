@@ -8,8 +8,10 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\WelcomeController;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Variant;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +41,11 @@ Route::get('gracias', function () {
 
 
 Route::get('prueba', function () {
-    Cart::instance('shopping');
-    return Cart::content();
+    $order = Order::first();
+    $pdf = Pdf::loadView('orders.ticket', compact('order'))->setPaper('a5');
+    $pdf->save(storage_path('app/public/tickets/ticket-' . $order->id . '.pdf'));
+    $order->pdf_path = 'tickets/ticket-' . $order->id . '.pdf';
+    $order->save();
+    return "Ticker generado correctamente";
+    return view('orders.ticket', compact('order'));
 });

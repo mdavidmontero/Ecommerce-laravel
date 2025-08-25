@@ -12,6 +12,7 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\RestoreCartItems::class,
 
         ],
+
     ];
 
     /**
@@ -25,6 +26,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         \App\Models\Cover::observe(\App\Observers\CoverObserver::class);
+        \App\Models\Order::observe(\App\Observers\OrderObserver::class);
     }
     public function shouldDiscoverEvents(): bool
     {
