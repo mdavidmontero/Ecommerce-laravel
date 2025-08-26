@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\FamilyController;
 use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ShipmentController;
 use App\Http\Controllers\Admin\SubcategoryController;
 
 Route::get('/', function () {
@@ -25,4 +26,5 @@ Route::get('products/{product}/variants/{variant}', [ProductController::class, '
 Route::put('products/{product}/variants/{variant}', [ProductController::class, 'variantsUpdate'])->name('products.variantsUpdate')->scopeBindings();
 Route::resource('covers', CoverController::class);
 Route::resource('drivers', DriverController::class);
+Route::get('shipments', [ShipmentController::class, 'index'])->name('shipments.index');
 Route::get('orders', [OrderController::class, 'index'])->name('orders.index');

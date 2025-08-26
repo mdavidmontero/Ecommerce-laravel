@@ -53,3 +53,4 @@ php artisan migrate:rollback
 
 php artisan make:model Driver -m
 php artisan make:controller Admin/DriverController --model=Driver
+php artisan make:datatable admin.shipments.shipment-table Shipment

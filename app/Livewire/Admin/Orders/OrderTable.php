@@ -3,14 +3,31 @@
 namespace App\Livewire\Admin\Orders;
 
 use App\Enums\OrderStatus;
+use App\Enums\ShipmentStatus;
+use App\Models\Driver;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Order;
+use App\Models\Shipment;
 use Illuminate\Support\Facades\Storage;
 
 class OrderTable extends DataTableComponent
 {
     protected $model = Order::class;
+
+    public $drivers;
+
+
+    public $new_shipment = [
+        'openModal' => false,
+        'order_id' => null,
+        'driver_id' => null,
+    ];
+
+    public function mount()
+    {
+        $this->drivers = Driver::all();
+    }
 
     public function configure(): void
     {
@@ -56,5 +73,59 @@ class OrderTable extends DataTableComponent
     {
         $order->status = OrderStatus::Processing;
         $order->save();
+    }
+    public function assignDriver(Order $order)
+    {
+        $this->new_shipment['openModal'] = true;
+        $this->new_shipment['order_id'] = $order->id;
+    }
+
+    public function saveShipment()
+    {
+        $this->validate([
+            'new_shipment.driver_id' => 'required|exists:drivers,id',
+
+        ]);
+        $order = Order::find($this->new_shipment['order_id']);
+        $order->status = OrderStatus::Shipped;
+        $order->save();
+        $order->shipment()->create([
+            'driver_id' => $this->new_shipment['driver_id'],
+        ]);
+        $this->reset('new_shipment');
+    }
+    public function markAsRefunded(Order $order)
+    {
+        $order->status = OrderStatus::Refunded;
+        $order->save();
+        $shipment = $order->shipments->last();
+        $shipment->refunded_at = now();
+        $shipment->save();
+    }
+    public function cancelOrder(Order $order)
+    {
+        if ($order->status == OrderStatus::Shipped) {
+            $this->dispatch('swal', [
+                'icon' => 'error',
+                'title' => 'No se puede cancelar la orden',
+                'text' => 'La orden tiene envios pendientes',
+            ]);
+            return;
+        }
+
+        if ($order->status == OrderStatus::Failed) {
+            $this->dispatch('swal', [
+                'icon' => 'error',
+                'title' => 'No se puede cancelar la orden',
+                'text' => 'El pedido no ha sido retornado por el delivery',
+            ]);
+            return;
+        }
+        $order->status = OrderStatus::Cancelled;
+        $order->save();
+    }
+    public function customView(): string
+    {
+        return 'admin.orders.modal';
     }
 }
